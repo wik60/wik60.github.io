@@ -9,8 +9,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=2027.1.4">
-  <link rel="stylesheet" href="extra.css?v=2027.1.4">
+  <link rel="stylesheet" href="styles.css?v=2027.1.5">
+  <link rel="stylesheet" href="extra.css?v=2027.1.5">
 </head>
 <body>
   <div class="app">
@@ -29,7 +29,7 @@
     <main>
       <header class="top"><div><span class="eyebrow">NOTATKI DO MATURY</span><h1 id="pageTitle">Plan nauki</h1></div><div class="top-actions"><span class="sync-state" id="syncState">Zapis lokalny</span><button id="randomBtn" class="pill">✦ Losuj pytanie</button></div></header>
       <section id="content"></section>
-      <footer class="site-version" aria-label="Wersja strony">Wersja 2027.1.4 • aktualizacja 15.09.2026</footer>
+      <footer class="site-version" aria-label="Wersja strony">Wersja 2027.1.5 • aktualizacja 15.09.2026</footer>
     </main>
   </div>
   <dialog id="authDialog" class="auth-dialog"><form method="dialog" class="auth-card"><button class="close" value="cancel" aria-label="Zamknij">×</button><span class="eyebrow">TWOJE KONTO</span><h2 id="authTitle">Zaloguj się</h2><p id="authHint">Postęp i notatki będą dostępne na każdym urządzeniu.</p><label>E-mail<input id="authEmail" type="email" autocomplete="email" required></label><label>Hasło<input id="authPassword" type="password" autocomplete="current-password" minlength="6" required></label><p class="form-error" id="authError"></p><button type="button" class="primary" id="authSubmit">Zaloguj się</button><button type="button" class="text-btn" id="authSwitch">Nie masz konta? Zarejestruj się</button></form></dialog>
@@ -37,9 +37,10 @@
   <dialog id="askDialog" class="ask-dialog"><form method="dialog" class="ask-card"><button class="close" value="cancel" aria-label="Zamknij">×</button><span class="eyebrow">POMOC W NAUCE</span><h2>Zapytaj ChatGPT</h2><p>Wybrany fragment:</p><blockquote id="askQuote"></blockquote><label>O co chcesz zapytać?<textarea id="askQuestion" placeholder="Np. Wyjaśnij to prostszymi słowami, podaj przykład z innej lektury albo ułóż argument do wypracowania…"></textarea></label><p class="ask-hint">Fragment i pytanie zostaną przekazane do nowej rozmowy w ChatGPT.</p><button type="button" class="primary" id="askSubmit">Otwórz rozmowę w ChatGPT</button></form></dialog>
   <div class="toast" id="toast" role="status"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js?v=2027.1.4"></script>
-  <script src="expanded-content.js?v=2027.1.4"></script>
-  <script src="essay-content.js?v=2027.1.4"></script>
-  <script src="app.js?v=2027.1.4"></script>
+  <script src="config.js?v=2027.1.5"></script>
+  <script src="expanded-content.js?v=2027.1.5"></script>
+  <script src="essay-content.js?v=2027.1.5"></script>
+  <script src="exam-content.js?v=2027.1.5"></script>
+  <script src="app.js?v=2027.1.5"></script>
 </body>
 </html>
