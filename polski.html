@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#d93b81">
+  <script>document.documentElement.dataset.theme=localStorage.getItem('vademecum-theme')||'pink'</script>
   <title>Różowe Vademecum Maturalne 2027</title>
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='17' fill='%23d93b81'/%3E%3Cpath d='M32 49S11 37 11 23c0-11 14-15 21-5 7-10 21-6 21 5 0 14-21 26-21 26Z' fill='white'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css?v=2027.1.7">
   <link rel="stylesheet" href="extra.css?v=2027.1.7">
+  <link rel="stylesheet" href="theme.css?v=2027.2.0">
 </head>
 <body data-protected-subject="polski" style="visibility:hidden">
   <div class="app">
@@ -29,7 +31,7 @@
     <main>
       <header class="top"><div><a class="subject-back" href="index.html">← Przedmioty</a><span class="eyebrow">NOTATKI DO MATURY</span><h1 id="pageTitle">Plan nauki</h1></div><div class="top-actions"><span class="sync-state" id="syncState">Zapis lokalny</span><button id="randomBtn" class="pill">✦ Losuj pytanie</button></div></header>
       <section id="content"></section>
-      <footer class="site-version" aria-label="Wersja strony">Wersja 2027.1.9 • aktualizacja 16.09.2026</footer>
+      <footer class="site-version" aria-label="Wersja strony">Wersja 2027.2.0 • aktualizacja 16.09.2026</footer>
     </main>
   </div>
   <dialog id="authDialog" class="auth-dialog"><form method="dialog" class="auth-card"><button class="close" value="cancel" aria-label="Zamknij">×</button><span class="eyebrow">TWOJE KONTO</span><h2 id="authTitle">Zaloguj się</h2><p id="authHint">Postęp i notatki będą dostępne na każdym urządzeniu.</p><label>E-mail<input id="authEmail" type="email" autocomplete="email" required></label><label>Hasło<input id="authPassword" type="password" autocomplete="current-password" minlength="6" required></label><p class="form-error" id="authError"></p><button type="button" class="primary" id="authSubmit">Zaloguj się</button><button type="button" class="text-btn" id="authSwitch">Nie masz konta? Zarejestruj się</button></form></dialog>
@@ -43,5 +45,6 @@
   <script src="essay-content.js?v=2027.1.7"></script>
   <script src="exam-content.js?v=2027.1.7"></script>
   <script src="app.js?v=2027.1.9"></script>
+  <script src="theme.js?v=2027.2.0"></script>
 </body>
 </html>
