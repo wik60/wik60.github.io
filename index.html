@@ -4,11 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#d93b81">
+  <script>document.documentElement.dataset.theme=localStorage.getItem('vademecum-theme')||'pink'</script>
   <title>Vademecum maturalne 2027 — wybierz przedmiot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="hub.css?v=2027.1.7">
+  <link rel="stylesheet" href="hub.css?v=2027.2.0">
+  <link rel="stylesheet" href="theme.css?v=2027.2.0">
 </head>
 <body>
   <main class="hub-shell">
@@ -38,13 +40,13 @@
         <button data-open-subject="angielski">Otwórz angielski</button>
       </article>
       <article class="subject-card math" data-subject-card="matematyka">
-        <span class="subject-icon">∑</span><span class="status soon" data-status="matematyka">Wkrótce</span>
+        <span class="subject-icon">∑</span><span class="status" data-status="matematyka">Wymaga dostępu</span>
         <h2>Matematyka</h2>
-        <p>Pełne vademecum, wzory, zadania i arkusze pojawią się w kolejnej aktualizacji.</p>
-        <button data-open-subject="matematyka">Aktywuj dostęp</button>
+        <p>Pełne vademecum: teoria, wzory, szkielety CKE, rozwiązania, próbny zestaw i własne notatki.</p>
+        <button data-open-subject="matematyka">Otwórz matematykę</button>
       </article>
     </section>
-    <footer>Wersja 2027.1.9 • aktualizacja 16.09.2026</footer>
+    <footer>Wersja 2027.2.0 • aktualizacja 16.09.2026</footer>
   </main>
 
   <dialog id="authDialog"><form method="dialog" class="modal-card"><button class="close" value="cancel">×</button><span class="eyebrow">TWOJE KONTO</span><h2 id="authTitle">Zaloguj się</h2><label>E-mail<input id="authEmail" type="email" autocomplete="email"></label><label>Hasło<input id="authPassword" type="password" minlength="6" autocomplete="current-password"></label><p class="form-error" id="authError"></p><button type="button" class="primary" id="authSubmit">Zaloguj się</button><button type="button" class="link-btn" id="authSwitch">Nie masz konta? Zarejestruj się</button></form></dialog>
@@ -52,6 +54,7 @@
   <div class="toast" id="toast"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="config.js?v=2027.1.8"></script>
-  <script src="hub.js?v=2027.1.8"></script>
+  <script src="hub.js?v=2027.2.0"></script>
+  <script src="theme.js?v=2027.2.0"></script>
 </body>
 </html>
