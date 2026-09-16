@@ -32,13 +32,11 @@ create policy "users read own subject access"
 on public.subject_access for select
 using (auth.uid() = user_id);
 
--- Migrate already-granted legacy entitlements into the new table.
 insert into public.subject_access(user_id, subject, source, created_at)
 select user_id, subject, 'legacy-entitlement', granted_at
 from public.subject_entitlements
 on conflict (user_id, subject) do nothing;
 
--- Read access from both new and legacy entitlement tables.
 create or replace function public.get_my_subject_access()
 returns table(subject text)
 language sql
@@ -57,48 +55,42 @@ $$;
 revoke all on function public.get_my_subject_access() from public;
 grant execute on function public.get_my_subject_access() to authenticated;
 
--- Redeem both new subject keys and legacy subject_access_keys.
--- Supabase normally installs pgcrypto in the extensions schema, so include it
--- in search_path to make digest() work reliably at RPC runtime.
-create or replace function public.redeem_subject_key(p_subject text, p_key text)
+-- Main redemption RPC used by the website.
+-- The browser computes SHA-256, so this RPC does not depend on pgcrypto/digest at runtime.
+create or replace function public.redeem_subject_key_hash(p_subject text, p_key_hash text)
 returns boolean
 language plpgsql
 security definer
-set search_path = public, extensions
+set search_path = public
 as $$
 declare
   v_user uuid := auth.uid();
-  v_hash text;
-  v_new public.access_keys%rowtype;
-  v_legacy public.subject_access_keys%rowtype;
+  v_new_id bigint;
+  v_new_subject text;
+  v_legacy_id uuid;
 begin
-  if v_user is null then
-    return false;
-  end if;
+  if v_user is null then return false; end if;
+  if p_subject not in ('polski','angielski','matematyka') then return false; end if;
+  if p_key_hash is null or length(p_key_hash) <> 64 then return false; end if;
 
-  if p_subject not in ('polski','angielski','matematyka') then
-    return false;
-  end if;
+  select ak.id, ak.subject
+    into v_new_id, v_new_subject
+  from public.access_keys ak
+  where ak.key_hash = lower(trim(p_key_hash))
+    and ak.active = true
+    and ak.redeemed_by is null
+    and (ak.subject = p_subject or ak.subject = 'premium')
+  for update skip locked
+  limit 1;
 
-  v_hash := encode(digest(upper(trim(p_key)), 'sha256'), 'hex');
-
-  -- New Stripe/manual key system.
-  select * into v_new
-  from public.access_keys
-  where key_hash = v_hash
-    and active = true
-    and redeemed_by is null
-    and (subject = p_subject or subject = 'premium')
-  for update skip locked;
-
-  if found then
+  if v_new_id is not null then
     update public.access_keys
     set redeemed_by = v_user,
         redeemed_at = now(),
         active = false
-    where id = v_new.id;
+    where id = v_new_id;
 
-    if v_new.subject = 'premium' then
+    if v_new_subject = 'premium' then
       insert into public.subject_access(user_id, subject, source)
       values
         (v_user, 'polski', 'premium-key'),
@@ -114,25 +106,24 @@ begin
     return true;
   end if;
 
-  -- Legacy subject key system.
-  select * into v_legacy
-  from public.subject_access_keys
-  where key_hash = v_hash
-    and redeemed_by is null
-    and subject = p_subject
-  for update skip locked;
+  select sak.id
+    into v_legacy_id
+  from public.subject_access_keys sak
+  where sak.key_hash = lower(trim(p_key_hash))
+    and sak.redeemed_by is null
+    and sak.subject = p_subject
+  for update skip locked
+  limit 1;
 
-  if not found then
-    return false;
-  end if;
+  if v_legacy_id is null then return false; end if;
 
   update public.subject_access_keys
   set redeemed_by = v_user,
       redeemed_at = now()
-  where id = v_legacy.id;
+  where id = v_legacy_id;
 
   insert into public.subject_entitlements(user_id, subject, granted_at, access_key_id)
-  values (v_user, p_subject, now(), v_legacy.id)
+  values (v_user, p_subject, now(), v_legacy_id)
   on conflict do nothing;
 
   insert into public.subject_access(user_id, subject, source)
@@ -140,6 +131,24 @@ begin
   on conflict (user_id, subject) do nothing;
 
   return true;
+end;
+$$;
+
+revoke all on function public.redeem_subject_key_hash(text,text) from public;
+grant execute on function public.redeem_subject_key_hash(text,text) to authenticated;
+
+-- Backward-compatible plain-text RPC for older frontend versions.
+create or replace function public.redeem_subject_key(p_subject text, p_key text)
+returns boolean
+language plpgsql
+security definer
+set search_path = public, extensions
+as $$
+declare
+  v_hash text;
+begin
+  v_hash := encode(digest(upper(trim(p_key)), 'sha256'), 'hex');
+  return public.redeem_subject_key_hash(p_subject, v_hash);
 end;
 $$;
 
