@@ -1,5 +1,6 @@
--- Premium access key system for Matura 2027
--- Run this once in Supabase SQL Editor.
+-- Premium access key system for Matura 2026
+-- Compatible with legacy subject_access_keys + subject_entitlements.
+-- Run this in Supabase SQL Editor.
 
 create extension if not exists pgcrypto;
 
@@ -26,12 +27,18 @@ create table if not exists public.subject_access (
 alter table public.access_keys enable row level security;
 alter table public.subject_access enable row level security;
 
--- Users can only read their own granted subjects. They cannot browse access keys.
 drop policy if exists "users read own subject access" on public.subject_access;
 create policy "users read own subject access"
 on public.subject_access for select
 using (auth.uid() = user_id);
 
+-- Migrate already-granted legacy entitlements into the new table.
+insert into public.subject_access(user_id, subject, source, created_at)
+select user_id, subject, 'legacy-entitlement', granted_at
+from public.subject_entitlements
+on conflict (user_id, subject) do nothing;
+
+-- Read access from both new and legacy entitlement tables.
 create or replace function public.get_my_subject_access()
 returns table(subject text)
 language sql
@@ -40,12 +47,17 @@ set search_path = public
 as $$
   select sa.subject
   from public.subject_access sa
-  where sa.user_id = auth.uid();
+  where sa.user_id = auth.uid()
+  union
+  select se.subject
+  from public.subject_entitlements se
+  where se.user_id = auth.uid();
 $$;
 
 revoke all on function public.get_my_subject_access() from public;
 grant execute on function public.get_my_subject_access() to authenticated;
 
+-- Redeem both new Premium/subject keys and legacy subject_access_keys.
 create or replace function public.redeem_subject_key(p_subject text, p_key text)
 returns boolean
 language plpgsql
@@ -54,8 +66,9 @@ set search_path = public
 as $$
 declare
   v_user uuid := auth.uid();
-  v_key public.access_keys%rowtype;
   v_hash text;
+  v_new public.access_keys%rowtype;
+  v_legacy public.subject_access_keys%rowtype;
 begin
   if v_user is null then
     return false;
@@ -67,7 +80,8 @@ begin
 
   v_hash := encode(digest(upper(trim(p_key)), 'sha256'), 'hex');
 
-  select * into v_key
+  -- New Stripe/Premium key system.
+  select * into v_new
   from public.access_keys
   where key_hash = v_hash
     and active = true
@@ -75,28 +89,53 @@ begin
     and (subject = p_subject or subject = 'premium')
   for update skip locked;
 
+  if found then
+    update public.access_keys
+    set redeemed_by = v_user,
+        redeemed_at = now(),
+        active = false
+    where id = v_new.id;
+
+    if v_new.subject = 'premium' then
+      insert into public.subject_access(user_id, subject, source)
+      values
+        (v_user, 'polski', 'premium-key'),
+        (v_user, 'angielski', 'premium-key'),
+        (v_user, 'matematyka', 'premium-key')
+      on conflict (user_id, subject) do nothing;
+    else
+      insert into public.subject_access(user_id, subject, source)
+      values (v_user, p_subject, 'subject-key')
+      on conflict (user_id, subject) do nothing;
+    end if;
+
+    return true;
+  end if;
+
+  -- Legacy subject key system.
+  select * into v_legacy
+  from public.subject_access_keys
+  where key_hash = v_hash
+    and redeemed_by is null
+    and subject = p_subject
+  for update skip locked;
+
   if not found then
     return false;
   end if;
 
-  update public.access_keys
+  update public.subject_access_keys
   set redeemed_by = v_user,
-      redeemed_at = now(),
-      active = false
-  where id = v_key.id;
+      redeemed_at = now()
+  where id = v_legacy.id;
 
-  if v_key.subject = 'premium' then
-    insert into public.subject_access(user_id, subject, source)
-    values
-      (v_user, 'polski', 'premium-key'),
-      (v_user, 'angielski', 'premium-key'),
-      (v_user, 'matematyka', 'premium-key')
-    on conflict (user_id, subject) do nothing;
-  else
-    insert into public.subject_access(user_id, subject, source)
-    values (v_user, p_subject, 'subject-key')
-    on conflict (user_id, subject) do nothing;
-  end if;
+  insert into public.subject_entitlements(user_id, subject, granted_at, access_key_id)
+  values (v_user, p_subject, now(), v_legacy.id)
+  on conflict do nothing;
+
+  insert into public.subject_access(user_id, subject, source)
+  values (v_user, p_subject, 'legacy-key')
+  on conflict (user_id, subject) do nothing;
 
   return true;
 end;
