@@ -9,16 +9,26 @@ function formatKey(seed){const s=seed.toUpperCase().replace(/[^A-F0-9]/g,'').sli
 
 async function stripeRequest(env,path,init={}){
   if(!env.STRIPE_SECRET_KEY){const e=new Error('Missing STRIPE_SECRET_KEY');e.publicMessage='Brak konfiguracji STRIPE_SECRET_KEY w Workerze.';throw e;}
-  const res=await fetch(`https://api.stripe.com/v1${path}`,{...init,headers:{authorization:`Bearer ${env.STRIPE_SECRET_KEY}`,...(init.headers||{})}});
-  const data=await res.json();
+  let res;
+  try{
+    res=await fetch(`https://api.stripe.com/v1${path}`,{...init,headers:{authorization:`Bearer ${env.STRIPE_SECRET_KEY}`,...(init.headers||{})}});
+  }catch(fetchError){
+    const e=new Error(`Stripe network error: ${fetchError?.message||'fetch failed'}`);
+    e.publicMessage='Worker nie może połączyć się z API Stripe.';
+    throw e;
+  }
+  const raw=await res.text();
+  let data={};
+  try{data=raw?JSON.parse(raw):{};}catch{data={raw};}
   if(!res.ok){
     console.error('Stripe error',res.status,data);
-    const e=new Error(data?.error?.message||'Stripe request failed');
+    const stripeMessage=data?.error?.message||raw||`Stripe HTTP ${res.status}`;
+    const e=new Error(stripeMessage);
     const type=data?.error?.type||'';
     const param=data?.error?.param||'';
     if(type==='authentication_error')e.publicMessage='Stripe odrzucił klucz API. Sprawdź STRIPE_SECRET_KEY i upewnij się, że używasz klucza live.';
-    else if(param.includes('price')||String(data?.error?.message||'').toLowerCase().includes('price'))e.publicMessage='Stripe odrzucił cenę produktu. Sprawdź STRIPE_PRICE_ID i czy cena jest w tym samym trybie live co klucz API.';
-    else e.publicMessage='Stripe odrzucił utworzenie płatności. Sprawdź konfigurację konta Stripe oraz komunikat „Multiple capabilities paused”.';
+    else if(param.includes('price')||String(stripeMessage).toLowerCase().includes('price'))e.publicMessage='Stripe odrzucił cenę produktu. Sprawdź STRIPE_PRICE_ID i czy cena jest w tym samym trybie live co klucz API.';
+    else e.publicMessage=`Stripe: ${stripeMessage}`;
     throw e;
   }
   return data;
@@ -103,8 +113,8 @@ export default {
 
       return json({error:'Not found'},404,headers);
     }catch(error){
-      console.error(error);
-      return json({error:error.publicMessage||'Server error'},500,headers);
+      console.error('Worker error',error?.message||error,error?.stack||'');
+      return json({error:error?.publicMessage||error?.message||'Server error'},500,headers);
     }
   }
 };
