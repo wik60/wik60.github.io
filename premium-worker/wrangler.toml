@@ -3,7 +3,7 @@ main = "src/index.js"
 compatibility_date = "2026-09-16"
 
 [vars]
-FRONTEND_ORIGIN = "https://matura2026byak.pages.dev"
+FRONTEND_ORIGIN = "https://wik60.github.io"
 STRIPE_PRICE_ID = "price_1UG6RUI9QKntPHIU7TPk7RRU"
 SUPABASE_URL = "https://ztxbktelvqfisafywmvx.supabase.co"
 
