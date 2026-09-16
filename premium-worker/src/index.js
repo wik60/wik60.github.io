@@ -1,4 +1,4 @@
-const WORKER_VERSION='3.1.2';
+const WORKER_VERSION='3.1.3';
 const json=(data,status=200,headers={})=>new Response(JSON.stringify({...data,workerVersion:WORKER_VERSION}),{status,headers:{'content-type':'application/json; charset=utf-8','x-worker-version':WORKER_VERSION,...headers}});
 
 function cors(env){return {'access-control-allow-origin':env.FRONTEND_ORIGIN,'access-control-allow-methods':'GET,POST,OPTIONS','access-control-allow-headers':'content-type'};}
@@ -39,6 +39,7 @@ async function createCheckout(env){
   if(!env.STRIPE_PRICE_ID){const e=new Error('Missing STRIPE_PRICE_ID');e.publicMessage='Brak STRIPE_PRICE_ID w konfiguracji Workera.';throw e;}
   const body=new URLSearchParams();
   body.set('mode','payment');
+  body.set('payment_method_types[0]','card');
   body.set('line_items[0][price]',env.STRIPE_PRICE_ID);
   body.set('line_items[0][quantity]','1');
   body.set('success_url',`${env.FRONTEND_ORIGIN}/?checkout=success&session_id={CHECKOUT_SESSION_ID}`);
