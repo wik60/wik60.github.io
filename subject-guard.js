@@ -38,7 +38,7 @@
 
     const tag=document.createElement('div');
     tag.className='subject-preview-tag';
-    tag.textContent=`PREVIEW ${labels[subject]||''} · v3.3.3`;
+    tag.textContent=`PREVIEW ${labels[subject]||''} · v3.3.4`;
     document.body.appendChild(tag);
   }
 
