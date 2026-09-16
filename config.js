@@ -3,8 +3,5 @@
 window.VADEMECUM_CONFIG = {
   supabaseUrl: 'https://ztxbktelvqfisafywmvx.supabase.co',
   supabaseAnonKey: 'sb_publishable_-r1TbaNpDb4tD-sdFwf4kg_btsGHHkX',
-
-  // Po wdrożeniu premium-workera w Cloudflare wklej tutaj jego publiczny adres,
-  // np. https://matura2027byak-premium.twoj-subdomain.workers.dev
-  paymentsApiBase: ''
+  paymentsApiBase: 'https://matura2026byak-premium.wiktorbrajer2.workers.dev'
 };
