@@ -43,7 +43,7 @@ create or replace function public.get_my_subject_access()
 returns table(subject text)
 language sql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
   select sa.subject
   from public.subject_access sa
@@ -57,12 +57,14 @@ $$;
 revoke all on function public.get_my_subject_access() from public;
 grant execute on function public.get_my_subject_access() to authenticated;
 
--- Redeem both new Premium/subject keys and legacy subject_access_keys.
+-- Redeem both new subject keys and legacy subject_access_keys.
+-- Supabase normally installs pgcrypto in the extensions schema, so include it
+-- in search_path to make digest() work reliably at RPC runtime.
 create or replace function public.redeem_subject_key(p_subject text, p_key text)
 returns boolean
 language plpgsql
 security definer
-set search_path = public
+set search_path = public, extensions
 as $$
 declare
   v_user uuid := auth.uid();
@@ -80,7 +82,7 @@ begin
 
   v_hash := encode(digest(upper(trim(p_key)), 'sha256'), 'hex');
 
-  -- New Stripe/Premium key system.
+  -- New Stripe/manual key system.
   select * into v_new
   from public.access_keys
   where key_hash = v_hash
