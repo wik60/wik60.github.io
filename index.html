@@ -5,18 +5,18 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#d93b81">
   <script>document.documentElement.dataset.theme=localStorage.getItem('vademecum-theme')||'pink'</script>
-  <title>Vademecum maturalne 2027 — wybierz przedmiot</title>
+  <title>Vademecum maturalne 2026 — wybierz przedmiot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="hub.css?v=2027.3.0">
-  <link rel="stylesheet" href="premium.css?v=2027.3.0">
-  <link rel="stylesheet" href="theme.css?v=2027.2.1">
+  <link rel="stylesheet" href="hub.css?v=2026.3.1">
+  <link rel="stylesheet" href="premium.css?v=2026.3.1">
+  <link rel="stylesheet" href="theme.css?v=2026.3.1">
 </head>
 <body>
   <main class="hub-shell">
     <header class="hub-top">
-      <div class="hub-brand"><span>♡</span><div><b>Vademecum</b><small>matura 2027</small></div></div>
+      <div class="hub-brand"><span>♡</span><div><b>Vademecum</b><small>matura 2026</small></div></div>
       <div class="account-area"><span id="userLabel">Nie jesteś zalogowany</span><button id="accountBtn">Zaloguj się</button></div>
     </header>
 
@@ -25,7 +25,7 @@
       <h1>Wybierz przedmiot ♡</h1>
       <p>Zaloguj się, aktywuj jednorazowy klucz i korzystaj z materiałów na każdym urządzeniu.</p>
       <div class="premium-cta">
-        <div><b>Premium 2027 — 34,99 zł</b><span>Jednorazowy zakup odblokowuje polski, angielski i matematykę.</span></div>
+        <div><b>Premium 2026 — 34,99 zł</b><span>Jednorazowy zakup odblokowuje polski, angielski i matematykę.</span></div>
         <button id="buyPremiumBtn">Kup dostęp za 34,99 zł</button>
       </div>
       <div id="hubMessage" class="hub-message" hidden></div>
@@ -51,7 +51,7 @@
         <button data-open-subject="matematyka">Otwórz matematykę</button>
       </article>
     </section>
-    <footer>Wersja 2027.3.0 • aktualizacja 16.09.2026</footer>
+    <footer>Wersja 2026.3.1 • aktualizacja 16.09.2026</footer>
   </main>
 
   <dialog id="authDialog"><form method="dialog" class="modal-card"><button class="close" value="cancel">×</button><span class="eyebrow">TWOJE KONTO</span><h2 id="authTitle">Zaloguj się</h2><label>E-mail<input id="authEmail" type="email" autocomplete="email"></label><label>Hasło<input id="authPassword" type="password" minlength="6" autocomplete="current-password"></label><p class="form-error" id="authError"></p><button type="button" class="primary" id="authSubmit">Zaloguj się</button><button type="button" class="link-btn" id="authSwitch">Nie masz konta? Zarejestruj się</button></form></dialog>
@@ -59,8 +59,8 @@
   <dialog id="purchaseDialog"><form method="dialog" class="modal-card"><button class="close" value="cancel">×</button><span class="eyebrow">ZAKUP ZAKOŃCZONY</span><h2>Twój klucz Premium</h2><p>Skopiuj klucz, zaloguj się i aktywuj go przy dowolnym przedmiocie. Odblokuje wszystkie trzy przedmioty.</p><div class="license-box"><code id="purchasedLicense">—</code><button type="button" id="copyLicenseBtn">Kopiuj</button></div><p class="form-error" id="purchaseError"></p><button type="button" class="primary" id="activatePurchasedBtn">Aktywuj teraz</button></form></dialog>
   <div class="toast" id="toast"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js?v=2027.3.0"></script>
-  <script src="hub.js?v=2027.3.0"></script>
-  <script src="theme.js?v=2027.2.1"></script>
+  <script src="config.js?v=2026.3.1"></script>
+  <script src="hub.js?v=2026.3.1"></script>
+  <script src="theme.js?v=2026.3.1"></script>
 </body>
 </html>
