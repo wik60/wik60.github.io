@@ -154,3 +154,6 @@ $$;
 
 revoke all on function public.redeem_subject_key(text,text) from public;
 grant execute on function public.redeem_subject_key(text,text) to authenticated;
+
+-- Force PostgREST to refresh its function/schema cache immediately.
+notify pgrst, 'reload schema';
