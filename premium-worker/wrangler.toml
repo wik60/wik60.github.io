@@ -1,14 +1,14 @@
-name = "matura2027byak-premium"
+name = "matura2026byak-premium"
 main = "src/index.js"
 compatibility_date = "2026-09-16"
 
 [vars]
-FRONTEND_ORIGIN = "https://matura2027byak.pages.dev"
+FRONTEND_ORIGIN = "https://matura2026byak.pages.dev"
 STRIPE_PRICE_ID = "price_1UG6RUI9QKntPHIU7TPk7RRU"
+SUPABASE_URL = "https://ztxbktelvqfisafywmvx.supabase.co"
 
-# Add these with `wrangler secret put ...`:
+# Add these as Worker secrets in Cloudflare:
 # STRIPE_SECRET_KEY
 # STRIPE_WEBHOOK_SECRET
-# SUPABASE_URL
 # SUPABASE_SERVICE_ROLE_KEY
 # LICENSE_SECRET
