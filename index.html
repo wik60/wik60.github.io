@@ -9,33 +9,33 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="hub.css?v=3.2.1">
-  <link rel="stylesheet" href="premium.css?v=3.2.1">
-  <link rel="stylesheet" href="theme.css?v=3.2.1">
+  <link rel="stylesheet" href="hub.css?v=3.3.0">
+  <link rel="stylesheet" href="premium.css?v=3.3.0">
+  <link rel="stylesheet" href="theme.css?v=3.3.0">
   <script src="https://js.stripe.com/dahlia/stripe.js"></script>
 </head>
 <body>
   <main class="hub-shell">
     <header class="hub-top"><div class="hub-brand"><span>♡</span><div><b>Vademecum</b><small>matura 2026</small></div></div><div class="account-area"><span id="userLabel">Nie jesteś zalogowany</span><button id="accountBtn">Zaloguj się</button></div></header>
     <section class="hub-hero">
-      <span class="eyebrow">TWOJE CENTRUM NAUKI</span><h1>Wybierz przedmiot ♡</h1><p>Zaloguj się, aktywuj jednorazowy klucz i korzystaj z materiałów na każdym urządzeniu.</p>
-      <div class="premium-cta"><div><b>Premium 2026 — 34,99 zł</b><span>Jednorazowy zakup odblokowuje polski, angielski i matematykę.</span></div><button id="buyPremiumBtn">Kup dostęp za 34,99 zł</button></div>
+      <span class="eyebrow">TWOJE CENTRUM NAUKI</span><h1>Wybierz przedmiot ♡</h1><p>Każdy przedmiot kupujesz osobno. Dostęp kosztuje 34,99 zł za przedmiot i jest jednorazowy.</p>
+      <div class="premium-cta"><div><b>34,99 zł / przedmiot</b><span>Polski, angielski i matematyka są sprzedawane osobno. Bez subskrypcji.</span></div></div>
       <div id="hubMessage" class="hub-message" hidden></div>
     </section>
     <section class="subject-grid" aria-label="Przedmioty">
-      <article class="subject-card polish" data-subject-card="polski"><span class="subject-icon">PL</span><span class="status" data-status="polski">Wymaga dostępu</span><h2>Język polski</h2><p>Lektury, motywy, pytania jawne, wypracowania, próbna matura i quizy.</p><button data-open-subject="polski">Otwórz polski</button></article>
-      <article class="subject-card english" data-subject-card="angielski"><span class="subject-icon">EN</span><span class="status" data-status="angielski">Wymaga dostępu</span><h2>Język angielski</h2><p>Od podstaw do matury podstawowej i rozszerzonej: gramatyka, słownictwo, pisanie i ustna.</p><button data-open-subject="angielski">Otwórz angielski</button></article>
-      <article class="subject-card math" data-subject-card="matematyka"><span class="subject-icon">∑</span><span class="status" data-status="matematyka">Wymaga dostępu</span><h2>Matematyka</h2><p>Pełne vademecum: teoria, wzory, szkielety CKE, rozwiązania, próbny zestaw i własne notatki.</p><button data-open-subject="matematyka">Otwórz matematykę</button></article>
+      <article class="subject-card polish" data-subject-card="polski"><span class="subject-icon">PL</span><span class="status" data-status="polski">Brak dostępu</span><h2>Język polski</h2><p>Lektury, motywy, pytania jawne, wypracowania, próbna matura i quizy.</p><div class="subject-actions"><button data-open-subject="polski">Mam klucz</button><button class="buy-subject" data-buy-subject="polski">Kup za 34,99 zł</button></div></article>
+      <article class="subject-card english" data-subject-card="angielski"><span class="subject-icon">EN</span><span class="status" data-status="angielski">Brak dostępu</span><h2>Język angielski</h2><p>Od podstaw do matury podstawowej i rozszerzonej: gramatyka, słownictwo, pisanie i ustna.</p><div class="subject-actions"><button data-open-subject="angielski">Mam klucz</button><button class="buy-subject" data-buy-subject="angielski">Kup za 34,99 zł</button></div></article>
+      <article class="subject-card math" data-subject-card="matematyka"><span class="subject-icon">∑</span><span class="status" data-status="matematyka">Brak dostępu</span><h2>Matematyka</h2><p>Pełne vademecum: teoria, wzory, szkielety CKE, rozwiązania, próbny zestaw i własne notatki.</p><div class="subject-actions"><button data-open-subject="matematyka">Mam klucz</button><button class="buy-subject" data-buy-subject="matematyka">Kup za 34,99 zł</button></div></article>
     </section>
-    <footer>Wersja 3.2.1 • aktualizacja 16.09.2026</footer>
+    <footer>Wersja 3.3.0 • aktualizacja 16.09.2026</footer>
   </main>
 
   <dialog id="authDialog"><form method="dialog" class="modal-card"><button class="close" value="cancel">×</button><span class="eyebrow">TWOJE KONTO</span><h2 id="authTitle">Zaloguj się</h2><label>E-mail<input id="authEmail" type="email" autocomplete="email"></label><label>Hasło<input id="authPassword" type="password" minlength="6" autocomplete="current-password"></label><p class="form-error" id="authError"></p><button type="button" class="primary" id="authSubmit">Zaloguj się</button><button type="button" class="link-btn" id="authSwitch">Nie masz konta? Zarejestruj się</button></form></dialog>
-  <dialog id="keyDialog"><form method="dialog" class="modal-card"><button class="close" value="cancel">×</button><span class="eyebrow">AKTYWACJA DOSTĘPU</span><h2 id="keyTitle">Wpisz klucz</h2><p>Klucz jest jednorazowy. Po aktywacji zostanie na stałe przypisany do Twojego konta.</p><label>Klucz dostępu<input id="accessKey" autocomplete="off" spellcheck="false" placeholder="PREM-XXXX-XXXX-XXXX"></label><p class="form-error" id="keyError"></p><button type="button" class="primary" id="keySubmit">Aktywuj dostęp</button></form></dialog>
-  <dialog id="checkoutDialog" class="checkout-dialog"><div class="checkout-card"><button class="close checkout-close" id="checkoutCloseBtn" type="button">×</button><span class="eyebrow">BEZPIECZNA PŁATNOŚĆ</span><h2>Premium 2026</h2><p class="checkout-lead">Jednorazowo 34,99 zł • bez subskrypcji</p><div id="checkoutStatus" class="checkout-status">Ładuję bezpieczny formularz Stripe…</div><div id="checkout-form"></div></div></dialog>
-  <dialog id="purchaseDialog"><form method="dialog" class="modal-card"><button class="close" value="cancel">×</button><span class="eyebrow">ZAKUP ZAKOŃCZONY</span><h2>Twój klucz Premium</h2><p>Skopiuj klucz, zaloguj się i aktywuj go przy dowolnym przedmiocie. Odblokuje wszystkie trzy przedmioty.</p><div class="license-box"><code id="purchasedLicense">—</code><button type="button" id="copyLicenseBtn">Kopiuj</button></div><p class="form-error" id="purchaseError"></p><button type="button" class="primary" id="activatePurchasedBtn">Aktywuj teraz</button></form></dialog>
+  <dialog id="keyDialog"><form method="dialog" class="modal-card"><button class="close" value="cancel">×</button><span class="eyebrow">AKTYWACJA DOSTĘPU</span><h2 id="keyTitle">Wpisz klucz</h2><p>Klucz jest jednorazowy i działa tylko dla przypisanego przedmiotu.</p><label>Klucz dostępu<input id="accessKey" autocomplete="off" spellcheck="false" placeholder="POL-XXXX-XXXX-XXXX"></label><p class="form-error" id="keyError"></p><button type="button" class="primary" id="keySubmit">Aktywuj dostęp</button></form></dialog>
+  <dialog id="checkoutDialog" class="checkout-dialog"><div class="checkout-card"><button class="close checkout-close" id="checkoutCloseBtn" type="button">×</button><span class="eyebrow">BEZPIECZNA PŁATNOŚĆ</span><h2 id="checkoutTitle">Dostęp do przedmiotu</h2><p class="checkout-lead">Jednorazowo 34,99 zł • bez subskrypcji</p><p id="checkoutSubjectLine" class="checkout-subject-line"></p><div id="checkoutStatus" class="checkout-status">Ładuję bezpieczny formularz Stripe…</div><div id="checkout-form"></div></div></dialog>
+  <dialog id="purchaseDialog"><form method="dialog" class="modal-card"><button class="close" value="cancel">×</button><span class="eyebrow">ZAKUP ZAKOŃCZONY</span><h2 id="purchasedTitle">Twój klucz</h2><p id="purchasedDescription">Skopiuj klucz, zaloguj się i aktywuj zakupiony przedmiot.</p><div class="license-box"><code id="purchasedLicense">—</code><button type="button" id="copyLicenseBtn">Kopiuj</button></div><p class="form-error" id="purchaseError"></p><button type="button" class="primary" id="activatePurchasedBtn">Aktywuj teraz</button></form></dialog>
   <div class="toast" id="toast"></div>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="config.js?v=3.2.1"></script><script src="hub.js?v=3.2.1"></script><script src="theme.js?v=3.2.1"></script>
+  <script src="config.js?v=3.3.0"></script><script src="hub.js?v=3.3.0"></script><script src="theme.js?v=3.3.0"></script>
 </body>
 </html>
