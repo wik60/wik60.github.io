@@ -1,4 +1,5 @@
-const json=(data,status=200,headers={})=>new Response(JSON.stringify(data),{status,headers:{'content-type':'application/json; charset=utf-8',...headers}});
+const WORKER_VERSION='3.1.2';
+const json=(data,status=200,headers={})=>new Response(JSON.stringify({...data,workerVersion:WORKER_VERSION}),{status,headers:{'content-type':'application/json; charset=utf-8','x-worker-version':WORKER_VERSION,...headers}});
 
 function cors(env){return {'access-control-allow-origin':env.FRONTEND_ORIGIN,'access-control-allow-methods':'GET,POST,OPTIONS','access-control-allow-headers':'content-type'};}
 function hex(bytes){return [...new Uint8Array(bytes)].map(b=>b.toString(16).padStart(2,'0')).join('');}
@@ -21,14 +22,14 @@ async function stripeRequest(env,path,init={}){
   let data={};
   try{data=raw?JSON.parse(raw):{};}catch{data={raw};}
   if(!res.ok){
-    console.error('Stripe error',res.status,data);
+    console.error('Stripe error',res.status,JSON.stringify(data));
     const stripeMessage=data?.error?.message||raw||`Stripe HTTP ${res.status}`;
     const e=new Error(stripeMessage);
     const type=data?.error?.type||'';
     const param=data?.error?.param||'';
-    if(type==='authentication_error')e.publicMessage='Stripe odrzucił klucz API. Sprawdź STRIPE_SECRET_KEY i upewnij się, że używasz klucza live.';
-    else if(param.includes('price')||String(stripeMessage).toLowerCase().includes('price'))e.publicMessage='Stripe odrzucił cenę produktu. Sprawdź STRIPE_PRICE_ID i czy cena jest w tym samym trybie live co klucz API.';
-    else e.publicMessage=`Stripe: ${stripeMessage}`;
+    if(type==='authentication_error')e.publicMessage=`Stripe odrzucił klucz API (${res.status}). Sprawdź STRIPE_SECRET_KEY.`;
+    else if(param.includes('price')||String(stripeMessage).toLowerCase().includes('price'))e.publicMessage=`Stripe odrzucił cenę produktu (${res.status}): ${stripeMessage}`;
+    else e.publicMessage=`Stripe (${res.status}): ${stripeMessage}`;
     throw e;
   }
   return data;
@@ -83,8 +84,10 @@ async function verifyStripeWebhook(request,env,raw){
 export default {
   async fetch(request,env){
     const url=new URL(request.url),headers=cors(env);
-    if(request.method==='OPTIONS')return new Response(null,{status:204,headers});
+    if(request.method==='OPTIONS')return new Response(null,{status:204,headers:{...headers,'x-worker-version':WORKER_VERSION}});
     try{
+      if(request.method==='GET'&&url.pathname==='/api/health')return json({ok:true},200,headers);
+
       if(request.method==='POST'&&url.pathname==='/api/create-checkout'){
         const origin=request.headers.get('origin');
         if(origin&&origin!==env.FRONTEND_ORIGIN)return json({error:'Origin not allowed'},403,headers);
@@ -105,10 +108,10 @@ export default {
 
       if(request.method==='POST'&&url.pathname==='/api/stripe-webhook'){
         const raw=await request.text();
-        if(!await verifyStripeWebhook(request,env,raw))return new Response('Invalid signature',{status:400});
+        if(!await verifyStripeWebhook(request,env,raw))return new Response('Invalid signature',{status:400,headers:{'x-worker-version':WORKER_VERSION}});
         const event=JSON.parse(raw);
         if(event.type==='checkout.session.completed'&&event.data?.object?.payment_status==='paid')await upsertAccessKey(env,event.data.object);
-        return new Response('ok');
+        return new Response('ok',{headers:{'x-worker-version':WORKER_VERSION}});
       }
 
       return json({error:'Not found'},404,headers);
