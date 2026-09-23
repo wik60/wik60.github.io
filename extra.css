@@ -20,3 +20,16 @@
 
 /* Auto-growing personal notes, including iPad/iOS Safari */
 textarea[data-note],textarea[data-annotation-note]{box-sizing:border-box!important;overflow-y:hidden!important;resize:none!important;min-height:72px;-webkit-overflow-scrolling:auto}
+
+/* Rich own-note highlighting */
+.rich-note-editor{width:100%;min-height:72px;border:1px solid #ecc1d3;border-radius:11px;padding:10px;font:inherit;line-height:1.55;outline:none;white-space:pre-wrap;overflow-wrap:anywhere;background:var(--card,#fff);color:var(--ink);cursor:text}
+.rich-note-editor:focus{border-color:var(--pink);box-shadow:0 0 0 3px color-mix(in srgb,var(--pink) 16%,transparent)}
+.rich-note-editor:empty:before{content:attr(data-placeholder);color:var(--muted);pointer-events:none}
+.note-text-highlight{background:#ffe66a;color:inherit;border-radius:3px;padding:0 1px}
+.note-format-actions,.own-note-actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.note-highlight-btn{border:1px solid var(--line);background:var(--soft);color:var(--hot);border-radius:9px;padding:7px 10px;font-weight:800;cursor:pointer}
+.note-highlight-btn:hover{filter:brightness(.98)}
+.own-note-actions{justify-content:space-between;margin-top:10px}
+html[data-theme="discord"] .rich-note-editor{background:#1e1f22!important;border-color:#4e5058!important;color:#f2f3f5!important}
+html[data-theme="discord"] .note-text-highlight{background:#7c6f20;color:#fff}
+@media(max-width:700px){.annotation-actions{align-items:flex-start;gap:8px}.note-format-actions{justify-content:flex-end}.note-highlight-btn{min-height:40px}}
