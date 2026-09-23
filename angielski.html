@@ -21,6 +21,7 @@ button,input{font:inherit}.app{display:grid;grid-template-columns:290px minmax(0
 
 @media(max-width:980px){.app{display:block}.sidebar{display:none}.mobilebar{display:flex;position:sticky;top:0;z-index:60;background:rgba(255,248,251,.97);border-bottom:1px solid var(--line);padding:10px 12px;gap:8px}.mobilebar select{flex:1;padding:9px;border:1px solid #e9bdd1;border-radius:10px;background:white}.main{padding:22px 14px 60px}.stats,.examgrid{grid-template-columns:repeat(2,1fr)}.levelgrid,.grid2,.grid3{grid-template-columns:1fr}.hero h1{font-size:42px}}
 @media(max-width:520px){.stats,.examgrid{grid-template-columns:1fr}.hero{padding:24px 18px}.main{padding-inline:10px}.card{padding:15px}}
+.topic-expansion summary{font-weight:800;color:var(--deep);cursor:pointer}.topic-expansion .phrasegrid{margin-top:10px}.language-bank p{margin:7px 0;padding-bottom:7px;border-bottom:1px dashed var(--line)}.language-bank p:last-child{border-bottom:0}.communication-grid{margin-bottom:18px}.model-speech{font-size:16px;line-height:1.75;margin:18px 0}.model-speech p{margin-bottom:0}html[data-theme="discord"] .language-bank p{border-color:var(--line)}
 @media print{.sidebar,.mobilebar,.toolbar,.btn{display:none!important}.app{display:block}.main{max-width:none;padding:0}.section{display:block!important;page-break-before:always}.hero{box-shadow:none}.card{break-inside:avoid}}
 .pdf-frame{width:100%;height:680px;border:1px solid #e8bfd2;border-radius:14px;background:#fff;margin-top:10px}.deeptext{line-height:1.65;color:#59434e}.modelanswer{white-space:pre-wrap;background:#fffafc;border:1px solid #efc6d8;border-radius:15px;padding:16px;line-height:1.62}.lesson-tip{background:#f8f3ff;border:1px solid #dcc9e8;border-radius:13px;padding:10px 12px;margin-top:10px}.phrasegrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.phrasegrid div{background:#fff8fb;border:1px solid #efd3df;border-radius:10px;padding:8px 10px}.audio-card details{margin-top:10px}.audio-card summary{cursor:pointer;font-weight:800;color:#7c3c59}@media(max-width:760px){.pdf-frame{height:520px}.phrasegrid{grid-template-columns:1fr}}</style>
 <link rel="stylesheet" href="theme.css?v=2027.2.1">
@@ -276,7 +277,8 @@ const initial=location.hash.slice(1);if(initial && document.getElementById(initi
 <script src="config.js?v=2027.1.8"></script>
 <script src="subject-guard.js?v=3.4.3"></script>
 <script src="english-listening.js?v=2027.2.3"></script>
-<script src="english-master.js?v=3.4.3"></script>
+<script src="english-vocab-expanded.js?v=3.4.6"></script>
+<script src="english-master.js?v=3.4.6"></script>
 <script src="english-features.js?v=2027.2.3"></script>
 <script src="theme.js?v=2027.2.1"></script>
 </body></html>
